@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Package Reviews</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }@
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .review-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-rating {
+            color: #ffc107;
+            font-size: 18px;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .review-actions button {
+            padding: 5px 15px;
+            font-size: 12px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .user-info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .rating-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .rating-input input {
+            width: 80px;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Insurance Package Reviews</h1>
+        <p>Share your experience and help others make informed decisions</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('login', this)">Login</button>
+        <button class="tab" onclick="showTab('register', this)">Register</button>
+        <button class="tab" onclick="showTab('reviews', this)">All Reviews</button>
+        <button class="tab" onclick="showTab('addReview', this)">Add Review</button>
+    </div>
+
+    <!-- Login Tab -->
+    <div id="login" class="content active">
+        <h2>Login</h2>
+        <div id="loginAlert" class="alert"></div>
+        <div class="form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" placeholder="Enter username">
+        </div>
+        <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter password">
+        </div>
+        <button class="btn btn-primary" onclick="loginUser()">Login</button>
+    </div>
+
+    <!-- Register Tab -->
+    <div id="register" class="content">
+        <h2>Register New User</h2>
+        <div id="registerAlert" class="alert"></div>
+        <div class="form-group">
+            <label for="regName">Full Name</label>
+            <input type="text" id="regName" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+            <label for="regUsername">Username</label>
+            <input type="text" id="regUsername" placeholder="Choose a username">
+        </div>
+        <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="regPassword">Password</label>
+            <input type="password" id="regPassword" placeholder="Choose a password">
+        </div>
+        <button class="btn btn-primary" onclick="registerUser()">Register</button>
+    </div>
+
+    <!-- All Reviews Tab -->
+    <div id="reviews" class="content">
+        <h2>All Reviews</h2>
+        <div class="filter-section">
+            <label for="filterPackageName">Filter by Package Name:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="filterPackageName" placeholder="Enter package name">
+                <button class="btn btn-primary" onclick="filterReviews()">Filter</button>
+                <button class="btn btn-warning" onclick="loadAllReviews()">Show All</button>
+            </div>
+        </div>
+        <div id="reviewsList"></div>
+    </div>
+
+    <!-- Add Review Tab -->
+    <div id="addReview" class="content">
+        <h2>Add New Review</h2>
+        <div id="addReviewAlert" class="alert"></div>
+        <div id="userInfoDiv" class="user-info" style="display: none;">
+            <strong>Logged in as:</strong> <span id="currentUser"></span>
+        </div>
+        <div class="form-group">
+            <label for="reviewPackageName">Package Name</label>
+            <input type="text" id="reviewPackageName" placeholder="Enter package name">
+        </div>
+        <div class="form-group">
+            <label for="reviewRating">Rating (1-5)</label>
+            <div class="rating-input">
+                <input type="number" id="reviewRating" min="1" max="5" placeholder="1-5">
+                <span id="ratingStars"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="reviewComment">Comment</label>
+            <textarea id="reviewComment" placeholder="Share your experience..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="addReview()">Submit Review</button>
+    </div>
+</div>
+
+<script src="Review.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TrueLife Insurance</title>
+    <link rel="stylesheet" href="policy.css">
+</head>
+<body>
+<div class="background-img">
+    <img src="assets/insurance-bg.jpg" alt="" srcset="">
+</div>
+
+<h2>Insurance Policies</h2>
+<p>We're here to protect you from the bad things happen in your life.
+    So choose the Best Insurance Plan suits you and stay protected.
+    Enjoy Your Life, We will look after you...</p>
+
+<div class="layout">
+    <!-- Left Side -->
+    <div class="ins-container"></div>
+
+    <!-- Right Side (Policy Info) -->
+    <div class="ins-info">
+        <div class="policy-details">...</div>
+            <button class="select-btn">Select</button>
+            <button class="terms-btn">Terms and Conditions</button>
+    </div>
+</div>
+
+<div id="termsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Terms and Conditions for TrueLife Insurance Policy</h3>
+
+        <p class="modal-policy-title"></p>
+
+        <div class="terms-text">
+            <h4>Minimum Commitment & Cancellation</h4>
+            <ul>
+                <li>A minimum commitment period of **3 months** applies to all policies.</li>
+                <li>Cancellation before the 3-month period incurs a penalty equal to one month's premium.</li>
+                <li>After 3 months, cancellation requires a 30-day notice period.</li>
+            </ul>
+
+            <h4>Premium & Payments</h4>
+            <ul>
+                <li>The monthly premium rate is fixed for the duration specified in the policy details.</li>
+                <li>Late payment (over 7 days) may result in temporary suspension of benefits.</li>
+            </ul>
+
+            <h4>Claim Limits & Exclusions</h4>
+            <ul>
+                <li>All claims are subject to verification and policy limits specified in the full contract.</li>
+                <li>Pre-existing conditions not disclosed during sign-up are generally **excluded** from coverage.</li>
+            </ul>
+        </div>
+
+        <button id="acceptTermsBtn" type="button">I Accept and Continue</button>
+
+    </div>
+</div>
+
+<!-- custom js -->
+<script src="policy.js"></script>
+</body>
+</html>

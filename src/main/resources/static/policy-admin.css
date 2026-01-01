@@ -1,0 +1,210 @@
+/* Reset + Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Quicksand", sans-serif;
+}
+
+:root {
+    --bg-color: #0b1a2e; /* Deep Navy Blue for background */
+    --second-bg-color: rgba(255, 255, 255, 0.15); /* Slightly transparent white for panels */
+    --text-color: #e0e0e0; /* Off-white for general text */
+    --main-color: #007bff; /* Vibrant Blue for highlights/primary elements (Save/Refresh) */
+    --accent-color: #4dc4ff; /* Lighter/Cyan Blue for label accents */
+    --danger-color: #dc3545; /* Standard Red for Delete */
+    --input-bg-color: #1a2c42; /* Darker blue for input fields */
+    --shadow-glow: rgba(0, 123, 255, 0.4); /* Strong blue glow for shadows */
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    padding: 2rem;
+    min-height: 100vh; /* Ensure full viewport height */
+}
+
+.background-img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.background-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4; /* Consistent opacity */
+    filter: brightness(0.7); /* Darken the image */
+}
+
+h2 {
+    font-size: 4.5rem; /* Slightly larger heading */
+    font-weight: 700;
+    margin-bottom: 2.5rem; /* Increased margin */
+    color: #ffffff; /* White title */
+    text-align: center;
+    text-shadow: 0 0 15px var(--shadow-glow); /* Blue glow */
+}
+
+/* Container */
+.admin-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--second-bg-color); /* Transparent white background */
+    padding: 3rem; /* Increased padding */
+    border-radius: 15px; /* More rounded corners */
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 30px var(--shadow-glow); /* Prominent blue glow */
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* Increased gap */
+    margin-bottom: 3rem; /* Increased bottom margin */
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator line */
+}
+
+.search-box label {
+    flex: 0 0 150px; /* Wider label space */
+    font-size: 1.8rem;
+    color: var(--accent-color); /* Highlight label color */
+    font-weight: 600;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 1rem; /* Increased padding */
+    border-radius: 8px;
+    font-size: 1.6rem;
+    background: var(--input-bg-color); /* Dark input background */
+    color: var(--text-color);
+    border: 1px solid rgba(0, 123, 255, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-box input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(77, 196, 255, 0.5);
+}
+
+.search-actions {
+    flex: 0 0 120px; /* Set a fixed width for the button container */
+}
+
+/* Form Inputs */
+.form-box {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem; /* Increased gap */
+}
+
+.form-box label {
+    font-size: 1.6rem;
+    color: var(--accent-color); /* Highlight label color */
+    margin-top: 0.5rem; /* Small space above label */
+}
+
+.form-box input,
+.form-box textarea {
+    width: 100%;
+    padding: 1rem; /* Increased padding */
+    border-radius: 8px;
+    resize: vertical; /* Only allow vertical resize for textarea */
+    font-size: 1.6rem;
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    border: 1px solid rgba(0, 123, 255, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-box input:focus,
+.form-box textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(77, 196, 255, 0.5);
+}
+
+/* Buttons */
+.btn {
+    padding: 1rem 1.5rem; /* Adjusted padding to be tighter for the smaller button */
+    font-size: 1.6rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 100%; /* Ensure button fills its new 120px container */
+}
+
+.refresh,
+.save {
+    background: var(--main-color);
+}
+
+.delete {
+    background: var(--danger-color);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    opacity: 1;
+}
+
+.refresh:hover,
+.save:hover {
+    background: #0056b3; /* Darker blue */
+    box-shadow: 0 6px 15px var(--shadow-glow);
+}
+
+.delete:hover {
+    background: #c9303c; /* Darker red */
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.5);
+}
+
+/* Button Group */
+.btn-group {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    h2 {
+        font-size: 3rem;
+    }
+
+    .admin-container {
+        padding: 2rem;
+    }
+
+    .search-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box label {
+        flex: auto;
+    }
+
+    /* Ensure the button fills the width in mobile view */
+    .search-actions {
+        flex: auto;
+        width: 100%;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

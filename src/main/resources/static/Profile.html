@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Profile - TrueLife Health Insurance</title>
+    <link rel="stylesheet" href="../CSS/Dashboard.css"/>
+    <link rel="stylesheet" href="../CSS/Profile.css"/>
+    <style>
+        .avatar-img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="nav-container">
+        <div class="logo">
+            <img src="../image/logo.png" class="logo-img" alt="CeyMed Logo"/>
+            TrueLife Profile
+        </div>
+        <div class="nav-buttons">
+            <span class="welcome-text">Welcome, <span id="username">User</span>!</span>
+            <a class="btn btn-outline" href="Dashboard.html">DASHBOARD</a>
+            <button class="btn btn-primary" id="logoutBtn">LOGOUT</button>
+        </div>
+    </div>
+</header>
+
+<main class="dashboard-main">
+    <div class="dashboard-container">
+        <section class="stats-section">
+            <h2>Your Profile</h2>
+        </section>
+
+        <!-- Read-only Preview (shown after save) -->
+        <section class="preview-card hidden" id="previewCard">
+            <div class="preview-header">
+                <img id="pvAvatar" class="avatar-img" alt="Avatar" src="../image/doctor.png"/>
+                <div>
+                    <h3 id="pvName">—</h3>
+                    <p class="muted">Your personal details (only visible to you)</p>
+                </div>
+            </div>
+            <div class="preview-grid">
+                <div class="pv-item"><span class="pv-label">Date of Birth</span><span class="pv-value" id="pvDob">—</span></div>
+                <div class="pv-item"><span class="pv-label">NIC</span><span class="pv-value" id="pvNic">—</span></div>
+                <div class="pv-item"><span class="pv-label">Phone</span><span class="pv-value" id="pvPhone">—</span></div>
+                <div class="pv-item pv-full"><span class="pv-label">Address</span><span class="pv-value" id="pvAddress">—</span></div>
+            </div>
+            <div class="actions" style="margin-top:1rem">
+                <button type="button" id="editBtn" class="btn btn-primary">Change details</button>
+            </div>
+        </section>
+
+        <!-- Profile Form -->
+        <section class="form-card" id="formCard">
+            <form id="profileForm" novalidate enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="e.g., Lakshan Perera" required/>
+                        <small class="error" id="fullNameErr"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" required/>
+                        <small class="error" id="dobErr"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="nic">NIC</label>
+                        <input type="text" id="nic" name="nic" placeholder="e.g., 200012345678 or 990123456V" required/>
+                        <small class="hint">Supports old (9 digits + V/X) and new (12 digits) formats.</small>
+                        <small class="error" id="nicErr"></small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="e.g., 0771234567" required/>
+                        <small class="hint">Use a valid Sri Lankan number.</small>
+                        <small class="error" id="phoneErr"></small>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="address">Address</label>
+                        <textarea id="address" name="address" rows="3" placeholder="No. 12, Flower Road, Kandy" required></textarea>
+                        <small class="error" id="addressErr"></small>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="image">Profile Image (PNG/JPG)</label>
+                        <input type="file" id="image" name="image" accept="image/*"/>
+                        <small class="hint">Optional</small>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">Save Profile</button>
+                    <button type="button" id="clearBtn" class="btn btn-outline">Clear</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+<script src="../JS/Profile.js"></script>
+</body>
+</html>

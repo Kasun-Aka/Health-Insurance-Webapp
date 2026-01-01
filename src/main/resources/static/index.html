@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TrueLife Health Insurance</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="CSS/style.css"/>
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <div class="nav-container">
+        <div class="logo">
+            <img src="image/logo.png" class="logo-img">
+            TrueLife
+        </div>
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="showFAQ()">FAQ</button>
+            <button class="btn btn-outline" onclick="showContact()">CONTACT&nbsp;US</button>
+            <button class="btn btn-outline" onclick="showPolicies()">Policies</button>
+            <button class="btn btn-primary" onclick="showLogin()">LOGIN</button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="content-left">
+        <div class="section-title">Care&nbsp;Plans</div>
+        <h1 class="main-title">Sri&nbsp;Lankan&nbsp;Best&nbsp;Health&nbsp;Insurance</h1>
+        <p class="subtitle">
+            Travel, work, or live abroad with total peace of mind. Our worldwide health insurance provides comprehensive
+            coverage wherever life takes you. Enjoy seamless care, affordable premiums, and 24/7 support—so you can
+            focus on living your adventure, not worrying about medical costs.
+        </p>
+    </div>
+    <div class="content-right">
+        <div class="insurance_image">
+            <!-- Added illustrative image for health insurance -->
+            <img src="image/insurance_image.png" alt="Health insurance illustration"
+                 style="max-width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid rgba(255, 255, 255, 0.3);"/>
+        </div>
+    </div>
+</main>
+
+
+<section class="features-section">
+    <h2>Why Choose TrueLife?</h2>
+    <!-- Real world logo image to reinforce brand identity -->
+    <div class="features-logo-wrapper">
+        <img src="image/logo.png" alt="TrueLife logo" class="features-logo"/>
+    </div>
+    <div class="features-container">
+        <div class="feature-card">
+            <img src="image/world_map.png" alt="Worldwide Coverage" class="feature-image"/>
+            <h3>Worldwide Coverage</h3>
+            <p class="feature-text">Enjoy healthcare protection wherever you are, giving you peace of mind when
+                travelling or living abroad.</p>
+        </div>
+        <div class="feature-card">
+            <img src="image/piggy_bank.png" alt="Affordable Premiums" class="feature-image"/>
+            <h3>Affordable Premiums</h3>
+            <p class="feature-text">Choose from flexible plans that suit your budget without compromising on quality of
+                care.</p>
+        </div>
+        <div class="feature-card">
+            <img src="image/doctor.png" alt="Comprehensive Care" class="feature-image"/>
+            <h3>Comprehensive Care</h3>
+            <p class="feature-text">Our plans cover everything from routine check‑ups to emergency hospitalizations and
+                specialist treatments.</p>
+        </div>
+        <div class="feature-card">
+            <img src="image/family.png" alt="Family Friendly" class="feature-image"/>
+            <h3>Family Friendly</h3>
+            <p class="feature-text">Protect your loved ones with family plans designed to meet the needs of every member
+                in your household.</p>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Feedback Section -->
+<section class="feedback-section">
+    <h2>Customer Feedback</h2>
+    <div class="feedback-container">
+        <div class="feedback-card">
+            <p class="feedback-message">"TrueLife has given us peace of mind while living abroad. The service and coverage
+                are excellent!"</p>
+            <p class="feedback-author">—&nbsp;Priya&nbsp;D.,&nbsp;Colombo</p>
+        </div>
+        <div class="feedback-card">
+            <p class="feedback-message">"Highly recommend their plans. The claim process was smooth and
+                hassle‑free."</p>
+            <p class="feedback-author">—&nbsp;John&nbsp;S.,&nbsp;Galle</p>
+        </div>
+        <div class="feedback-card">
+            <p class="feedback-message">"TrueLife's customer support is amazing. They helped us choose the perfect plan
+                for our needs."</p>
+            <p class="feedback-author">—&nbsp;Amaya&nbsp;R.,&nbsp;Negombo</p>
+        </div>
+    </div>
+</section>
+
+<!-- Cookie Modal -->
+<div id="cookieModal" class="cookie-modal show">
+    <div class="cookie-content">
+        <p class="cookie-text">
+            With cookies we can provide you with a user‑friendly, safe and effective website.
+            To activate the usage of certain cookies on this website, you can click the button
+            (Accept All Cookies) or use the Cookie Settings Tool. You can withdraw consent at any
+            time using this tool.
+            <span class="cookie-link" onclick="showCookiePolicy()">Our&nbsp;Cookies&nbsp;Policy</span>
+        </p>
+        <div class="cookie-buttons">
+            <button class="btn btn-primary" onclick="acceptAllCookies()">ACCEPT&nbsp;ALL&nbsp;COOKIES</button>
+            <button class="btn btn-outline" onclick="rejectAllCookies()">REJECT&nbsp;ALL</button>
+            <button class="btn btn-outline" onclick="showCookieSettings()">COOKIE&nbsp;SETTINGS</button>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="JS/script.js"></script>
+</body>
+</html>

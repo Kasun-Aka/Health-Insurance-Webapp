@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Report Dashboard</title>
+    <link rel="stylesheet" href="/css/report-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="dashboard">
+    <!--  Sidebar -->
+    <aside class="sidebar">
+        <h2>🩺True life Health Insurance</h2>
+        <nav>
+            <button onclick="redirectToDetailsPage()"><i>➕</i> Create Report</button>
+            <button onclick="getAllReports()"><i>📋</i> View Reports</button>
+            <button onclick="redirectToDetailsPage()"><i>✏️</i> Update Report</button>
+
+            <button onclick="deleteReport()"><i>🗑️</i> Delete Report</button>
+            <hr>
+            <button onclick="viewEarnings()"><i>💰</i> Earnings</button>
+            <button onclick="viewUsers()"><i>👥</i> Users</button>
+            <button onclick="viewClaims()"><i>📄</i> Claims</button>
+        </nav>
+        <div class="theme-toggle">
+            <button id="themeToggle">🌙 Toggle Theme</button>
+        </div>
+    </aside>
+
+    <!--  Main Content -->
+    <main class="main">
+        <header>
+            <h1> Admin Report & Analytics Dashboard</h1>
+            <p id="currentDate"></p>
+        </header>
+
+        <!--  Analytics Cards -->
+        <section class="cards">
+            <div class="card" id="earningsCard">
+                <h3>💰 Total Earnings</h3>
+                <p id="earningsValue">$0</p>
+            </div>
+            <div class="card" id="usersCard">
+                <h3>👥 Total Users</h3>
+                <p id="usersValue">0</p>
+            </div>
+            <div class="card" id="claimsCard">
+                <h3>📄 Total Claims</h3>
+                <p id="claimsValue">0</p>
+            </div>
+        </section>
+
+        <!--  Chart -->
+        <section class="chart-section">
+            <canvas id="analyticsChart"></canvas>
+        </section>
+
+        <!--  Table -->
+        <section class="table-section">
+            <table id="reportTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Report Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Earnings</th>
+                    <th>Total Customers</th>
+                    <th>Total Policies</th>
+                    <th>Total Claims</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+</div>
+
+<script src="/js/report.js"></script>
+</body>
+</html>

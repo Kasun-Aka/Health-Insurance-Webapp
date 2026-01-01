@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Manager</title>
+    <link rel="stylesheet" href="/css/report-details.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="container">
+    <h1>📋True Life Report Management</h1>
+
+    <!-- Mode Selector -->
+    <div class="mode-selector">
+        <button id="createModeBtn" class="active">🆕 Create Report</button>
+        <button id="updateModeBtn">✏️ Update Report</button>
+    </div>
+
+    <!-- Fetch Section (only for update mode) -->
+    <div class="fetch-section hidden" id="fetchSection">
+        <input type="number" id="reportIdInput" placeholder="Enter Report ID to Update">
+        <button id="fetchBtn">Fetch Report</button>
+    </div>
+
+    <!-- Shared Form -->
+    <form id="reportForm">
+        <div class="form-group">
+            <label>Report Name</label>
+            <input type="text" id="reportName" required>
+        </div>
+
+        <div class="form-group">
+            <label>Report Type</label>
+            <input type="text" id="reportType" required>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="description" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="action-btn">💾 Submit</button>
+    </form>
+
+    <a href="/report-dashboard.html" class="back-link">⬅ Back to Dashboard</a>
+</div>
+
+<script src="/js/report-details.js"></script>
+</body>
+</html>
