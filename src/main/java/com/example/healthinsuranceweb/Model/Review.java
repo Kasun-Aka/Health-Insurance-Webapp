@@ -1,22 +1,32 @@
 package com.example.healthinsuranceweb.Model;
 
-import jakarta.persistence.*;
+import com.example.healthinsuranceweb.Entity.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 @Entity
 @Table(name = "review")
 public class Review {
 
+    // Getters and Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private user user;
+    @JsonIgnoreProperties({"payment", "password", "createdAt"}) // Don't leak passwords!
+    private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_package_id", nullable = false)
-    private InsurancePackage insurancePackage;
+    @JsonIgnoreProperties("payment")
+    private policy insurancePackage;
 
     @Column(name = "rating", nullable = false)
     private int rating;
@@ -27,44 +37,4 @@ public class Review {
     // Constructors
     public Review() {}
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public user getUser() {
-        return user;
-    }
-
-    public void setUser(user user) {
-        this.user = user;
-    }
-
-    public InsurancePackage getInsurancePackage() {
-        return insurancePackage;
-    }
-
-    public void setInsurancePackage(InsurancePackage insurancePackage) {
-        this.insurancePackage = insurancePackage;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 }

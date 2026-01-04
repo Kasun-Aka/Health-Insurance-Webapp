@@ -81,8 +81,14 @@ public class ReportController {
         return reportService.getTotalEarnings();
     }
 
-    @GetMapping("/top-policy")
-    public Long getMostSelectedPolicy() {
-        return reportService.getMostSelectedPolicyId();
+    @GetMapping("/topPolicy")
+    public Object[] getMostSelectedPolicy() {
+        return reportService.getMostSelectedPolicyName();
     }
+
+    @GetMapping("/ratings")
+    public List<Object[]> findAverageRatingsByPackage() { return reportService.findAverageRatingsByPackage(); }
+
+    @GetMapping("/monthly-earnings")
+    public List<Object[]> findMonthlyEarnings() { return reportService.findMonthlyEarnings(); }
 }

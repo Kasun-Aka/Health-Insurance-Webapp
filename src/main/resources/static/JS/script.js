@@ -51,6 +51,8 @@ function showNotification(message, type = 'success') {
     }, 3500);
 }
 
+
+
 /***** API + Paths *****/
 const API_BASE = 'http://localhost:8080/api/auth';
 const DASHBOARD_URL = '../Dashboard/Dashboard.html';
@@ -74,6 +76,7 @@ function showLogin() {
     <div style="display:flex; gap:.5rem; margin-bottom:1rem; border:1px solid #e0e0e0; border-radius:12px; padding:.25rem;">
       <button id="tabLogin" class="tab-btn" style="flex:1; border:none; background:#1976d2; color:#fff; padding:.65rem; border-radius:10px; font-weight:600; cursor:pointer">Login</button>
       <button id="tabRegister" class="tab-btn" style="flex:1; border:none; background:transparent; color:#1976d2; padding:.65rem; border-radius:10px; font-weight:600; cursor:pointer">Register</button>
+      <button id="tabAdminLogin" class="tab-btn" style="flex:1; border:none; background:transparent; color:#1976d2; padding:.65rem; border-radius:10px; font-weight:600; cursor:pointer">Admin Login</button>
     </div>
 
     <!-- LOGIN -->
@@ -100,6 +103,11 @@ function showLogin() {
              style="width:100%; padding:.7rem .9rem; border:1px solid #cfd8dc; border-radius:10px;">
       <button type="submit" class="btn btn-primary" style="margin-top:1rem; width:100%; padding:.8rem; border:none; border-radius:12px; background:linear-gradient(45deg,#1976d2,#42a5f5); color:#fff; font-weight:700; cursor:pointer;">Create Account</button>
     </form>
+
+    <!--ADMIN LOGIN -->
+        <form id="adminLoginForm" autocomplete="on" style="display:none">
+          <button type="submit" class="btn btn-primary" style="margin-top:1rem; width:100%; padding:.8rem; border:none; border-radius:12px; background:linear-gradient(45deg,#1976d2,#42a5f5); color:#fff; font-weight:700; cursor:pointer;">Admin Portal</button>
+        </form>
   </div>`;
 
     document.body.appendChild(modal);
@@ -107,9 +115,11 @@ function showLogin() {
     // events
     const closeBtn = modal.querySelector('button[aria-label="Close"]');
     const tabLogin = modal.querySelector('#tabLogin');
+    const tabAdminLogin = modal.querySelector('#tabAdminLogin');
     const tabRegister = modal.querySelector('#tabRegister');
     const loginForm = modal.querySelector('#loginForm');
     const registerForm = modal.querySelector('#registerForm');
+    const adminLoginForm = modal.querySelector('#adminLoginForm');
 
     // switch tabs
     tabLogin.addEventListener('click', () => {
@@ -117,17 +127,34 @@ function showLogin() {
         tabLogin.style.color = '#fff';
         tabRegister.style.background = 'transparent';
         tabRegister.style.color = '#1976d2';
+        tabAdminLogin.style.background = 'transparent';
+        tabAdminLogin.style.color = '#1976d2';
         loginForm.style.display = 'block';
         registerForm.style.display = 'none';
+        adminLoginForm.style.display = 'none';
     });
     tabRegister.addEventListener('click', () => {
         tabRegister.style.background = '#1976d2';
         tabRegister.style.color = '#fff';
         tabLogin.style.background = 'transparent';
         tabLogin.style.color = '#1976d2';
+        tabAdminLogin.style.background = 'transparent';
+        tabAdminLogin.style.color = '#1976d2';
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
+        adminLoginForm.style.display = 'none';
     });
+    tabAdminLogin.addEventListener('click', () => {
+            tabAdminLogin.style.background = '#1976d2';
+            tabAdminLogin.style.color = '#fff';
+            tabRegister.style.background = 'transparent';
+            tabRegister.style.color = '#1976d2';
+            tabLogin.style.background = 'transparent';
+            tabLogin.style.color = '#1976d2';
+            adminLoginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'none';
+        });
 
     // close
     closeBtn.addEventListener('click', () => modal.remove());
@@ -213,7 +240,15 @@ function showLogin() {
             showNotification(err.message || 'Registration failed', 'error');
         }
     });
+
+    /***** ADMIN LOGIN — API backed *****/
+    adminLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            window.location.href = "AdminDashboard.html";
+    });
 }
+
+
 
 /***** Placeholder handlers for your header buttons *****/
 function showFAQ() {

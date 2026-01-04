@@ -2,81 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Report Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Analytics | True Life</title>
     <link rel="stylesheet" href="/css/report-style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="dashboard">
-    <!--  Sidebar -->
     <aside class="sidebar">
-        <h2>🩺True life Health Insurance</h2>
-        <nav>
-            <button onclick="redirectToDetailsPage()"><i>➕</i> Create Report</button>
-            <button onclick="getAllReports()"><i>📋</i> View Reports</button>
-            <button onclick="redirectToDetailsPage()"><i>✏️</i> Update Report</button>
-
-            <button onclick="deleteReport()"><i>🗑️</i> Delete Report</button>
-            <hr>
-            <button onclick="viewEarnings()"><i>💰</i> Earnings</button>
-            <button onclick="viewUsers()"><i>👥</i> Users</button>
-            <button onclick="viewClaims()"><i>📄</i> Claims</button>
-        </nav>
-        <div class="theme-toggle">
-            <button id="themeToggle">🌙 Toggle Theme</button>
+        <div class="brand">
+            <span class="logo">🩺</span>
+            <h2>True Life</h2>
         </div>
+        <nav>
+            <div class="nav-label">Main Menu</div>
+            <button class="nav-item active">📊 Dashboard Overview</button>
+            <button class="nav-item" onclick="location.reload()">🔄 Refresh Stats</button>
+        </nav>
+        <!-- div class="theme-toggle">
+            <button id="themeToggle">🌙 Dark Mode</button>
+        </div -->
     </aside>
 
-    <!--  Main Content -->
     <main class="main">
-        <header>
-            <h1> Admin Report & Analytics Dashboard</h1>
-            <p id="currentDate"></p>
+        <header class="main-header">
+            <div>
+                <h1>Executive Analytics</h1>
+                <p id="currentDate" class="text-muted"></p>
+            </div>
+            <div class="user-profile">
+                <span>Welcome, Admin</span>
+            </div>
         </header>
 
-        <!--  Analytics Cards -->
         <section class="cards">
-            <div class="card" id="earningsCard">
-                <h3>💰 Total Earnings</h3>
-                <p id="earningsValue">$0</p>
+            <div class="card stat-card">
+                <div class="card-icon blue">💰</div>
+                <div class="card-info">
+                    <h3>Total Earnings</h3>
+                    <p id="earningsValue" class="stat-number">Loading...</p>
+                </div>
             </div>
-            <div class="card" id="usersCard">
-                <h3>👥 Total Users</h3>
-                <p id="usersValue">0</p>
+            <div class="card stat-card">
+                <div class="card-icon green">👥</div>
+                <div class="card-info">
+                    <h3>Total Customers</h3>
+                    <p id="usersValue" class="stat-number">Loading...</p>
+                </div>
             </div>
-            <div class="card" id="claimsCard">
-                <h3>📄 Total Claims</h3>
-                <p id="claimsValue">0</p>
+            <div class="card stat-card">
+                <div class="card-icon orange">🏆</div>
+                <div class="card-info">
+                    <h3>Most Popular Plan</h3>
+                    <p id="topPolicyValue" class="stat-number" style="font-size: 1.1rem;">Loading...</p>
+                </div>
             </div>
         </section>
 
-        <!--  Chart -->
-        <section class="chart-section">
-            <canvas id="analyticsChart"></canvas>
-        </section>
-
-        <!--  Table -->
-        <section class="table-section">
-            <table id="reportTable">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Report Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th>Earnings</th>
-                    <th>Total Customers</th>
-                    <th>Total Policies</th>
-                    <th>Total Claims</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+        <section class="visuals-grid">
+            <div class="card chart-container" style="height: 400px; overflow-y: auto;">
+                <h3>Earnings Growth Forecast</h3>
+                <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="analyticsChart"></canvas>
+                </div>
+            </div>
+            <div class="card table-container">
+                <h3>Package Ratings</h3>
+                <div class="table-responsive">
+                    <table id="ratingTable">
+                        <thead>
+                        <tr>
+                            <th>Insurance Plan</th>
+                            <th>Average Rating</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td colspan="2">Loading feedback...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
     </main>
 </div>
-
 <script src="/js/report.js"></script>
 </body>
 </html>

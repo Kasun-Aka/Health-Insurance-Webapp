@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const box = document.createElement("div");
                 box.classList.add("ins-box");
                 box.innerHTML = `
-                    <img src="${policy.imageUrl || `../assets/${policy.policyName.toLowerCase()}-img.jpg`}"
+                    <img src="/assets/${policy.imageUrl}"
                          alt="${policy.policyName}">
                     <h3>${policy.policyName}</h3>
                 `;

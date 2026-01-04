@@ -1,152 +1,114 @@
-let chart;
+let myChart;
+const API_BASE = "/admin/reports";
 
-// 🧹 Clear and Add Rows
-function clearTable() {
-    document.querySelector("#reportTable tbody").innerHTML = "";
+document.addEventListener("DOMContentLoaded", () => {
+    fetchAllStats();
+    updateDate();
+});
+
+async function fetchAllStats() {
+    try {
+        // Parallel fetching
+        const [earnings, users, topPolicy, ratings, monthlyData] = await Promise.all([
+            fetch(`${API_BASE}/earnings`).then(res => res.json()),
+            fetch(`${API_BASE}/users`).then(res => res.json()),
+            fetch(`${API_BASE}/topPolicy`).then(res => res.json()),
+            fetch(`${API_BASE}/ratings`).then(res => res.json()),
+            fetch(`${API_BASE}/monthly-earnings`).then(res => res.json())
+        ]);
+
+        // 1. Update Top Cards
+        document.getElementById("earningsValue").textContent = `Rs. ${earnings.toLocaleString()}`;
+        document.getElementById("usersValue").textContent = users;
+        document.getElementById("topPolicyValue").textContent = topPolicy || "N/A";
+
+        // 2. Populate the NEW Ratings Table
+        populateRatingTable(ratings);
+
+        // 3. Render Chart (Fixed the variable passing)
+        renderChart(monthlyData);
+
+    } catch (error) {
+        console.error("Dashboard Sync Failed:", error);
+        Swal.fire("Error", "Could not sync data from server", "error");
+    }
 }
 
-function addReportToTable(report) {
-    const tbody = document.querySelector("#reportTable tbody");
-    const row = document.createElement("tr");
-    row.innerHTML = `
-    <td>${report.id}</td>
-    <td>${report.reportName}</td>
-    <td>${report.reportType}</td>
-    <td>${report.description}</td>
-    <td>${report.earnings}</td>
-    <td>${report.totalCustomers}</td>
-    <td>${report.totalPolicies}</td>
-    <td>${report.totalClaims}</td>`;
-    tbody.appendChild(row);
-}
+function populateRatingTable(ratings) {
+    const tbody = document.querySelector("#ratingTable tbody");
+    tbody.innerHTML = "";
 
-// 📊 Create Report
-async function createReport() {
-    const res = await fetch("/admin/reports", { method: "POST" });
-    const data = await res.json();
-    clearTable();
-    addReportToTable(data);
-    Swal.fire("✅ Report Created!", `ID: ${data.id}`, "success");
-    updateAnalytics();
-}
+    if (!ratings || ratings.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='2'>No ratings yet</td></tr>";
+        return;
+    }
 
-// 📋 Get All Reports
-async function getAllReports() {
-    const res = await fetch("/admin/reports");
-    const reports = await res.json();
-    clearTable();
-    reports.forEach(addReportToTable);
-}
-
-// ✏️ Update Report
-async function updateReport() {
-    const id = prompt("Enter Report ID to update:");
-    if (!id) return;
-    const reportName = prompt("Enter new report name:");
-    const reportType = prompt("Enter report type:");
-    const description = prompt("Enter description:");
-    const earnings = parseFloat(prompt("Enter earnings:"));
-    const totalCustomers = parseInt(prompt("Enter total customers:"));
-    const totalPolicies = parseInt(prompt("Enter total policies:"));
-    const totalClaims = parseInt(prompt("Enter total claims:"));
-
-    const res = await fetch(`/admin/reports/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            reportName,
-            reportType,
-            description,
-            earnings,
-            totalCustomers,
-            totalPolicies,
-            totalClaims,
-        }),
+    ratings.forEach(item => {
+        // item[0] = Package Name, item[1] = Average Rating
+        const row = `
+            <tr>
+                <td><strong>${item[0]}</strong></td>
+                <td>
+                    <span style="color: #f97316;">${'⭐'.repeat(Math.round(item[1]))}</span>
+                    (${parseFloat(item[1]).toFixed(1)})
+                </td>
+            </tr>`;
+        tbody.innerHTML += row;
     });
-
-    if (res.ok) {
-        Swal.fire("✅ Updated!", "Report updated successfully", "success");
-        getAllReports();
-    } else {
-        Swal.fire("❌ Error", "Could not update report", "error");
-    }
 }
 
-// 🗑️ Delete Report
-async function deleteReport() {
-    const id = prompt("Enter Report ID to delete:");
-    if (!id) return;
-    const res = await fetch(`/admin/reports/${id}`, { method: "DELETE" });
-    if (res.ok) {
-        Swal.fire("🗑️ Deleted!", "Report removed", "success");
-        getAllReports();
-    } else {
-        Swal.fire("❌ Error", "Could not delete report", "error");
-    }
-}
-
-// 💰 View Analytics
-async function viewEarnings() {
-    const res = await fetch("/admin/reports/earnings");
-    const data = await res.json();
-    document.getElementById("earningsValue").textContent = `$${data}`;
-    Swal.fire("💰 Total Earnings", `$${data}`, "info");
-}
-
-async function viewUsers() {
-    const res = await fetch("/admin/reports/users");
-    const data = await res.json();
-    document.getElementById("usersValue").textContent = data;
-    Swal.fire("👥 Total Users", `${data}`, "info");
-}
-
-async function viewClaims() {
-    const res = await fetch("/admin/reports/claims");
-    const data = await res.json();
-    document.getElementById("claimsValue").textContent = data;
-    Swal.fire("📄 Total Claims", `${data}`, "info");
-}
-
-// 📈 Chart Update
-function updateAnalytics() {
-    const earnings = parseFloat(document.getElementById("earningsValue").textContent.replace("$", "")) || 0;
-    const users = parseInt(document.getElementById("usersValue").textContent) || 0;
-    const claims = parseInt(document.getElementById("claimsValue").textContent) || 0;
-
+function renderChart(monthlyData) {
     const ctx = document.getElementById("analyticsChart").getContext("2d");
-    if (chart) chart.destroy();
+    if (myChart) myChart.destroy();
 
-    chart = new Chart(ctx, {
-        type: "bar",
+    // Labels: "Jan 2024", "Feb 2024", ...
+    const labels = monthlyData.map(item => `${item[0]} ${item[1]}`);
+
+    // Data: total earnings
+    const dataPoints = monthlyData.map(item => item[2]);
+
+    myChart = new Chart(ctx, {
+        type: 'line',
         data: {
-            labels: ["Earnings", "Users", "Claims"],
+            labels: labels,
             datasets: [{
-                label: "Live Analytics",
-                data: [earnings, users, claims],
-                backgroundColor: ["#10b981", "#3b82f6", "#f97316"],
-                borderRadius: 10,
-            }],
+                label: 'Actual Revenue (Rs.)',
+                data: dataPoints,
+                fill: true,
+                tension: 0.3
+            }]
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: false } },
-        },
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Revenue (Rs.)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    }
+                }
+            }
+        }
     });
 }
 
-// 🌙 Theme Toggle
-document.getElementById("themeToggle").addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-});
 
-// 🗓️ Show Current Date
-document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-});
-
-function redirectToDetailsPage() {
-    window.location.href = "/report-details.html";
+function updateDate() {
+    document.getElementById("currentDate").textContent = new Date().toLocaleDateString("en-US", {
+        weekday: "long", year: "numeric", month: "long", day: "numeric"
+    });
 }

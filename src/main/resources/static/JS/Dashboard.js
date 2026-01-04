@@ -109,7 +109,7 @@ function logout() {
 }
 
 function Payment1() {
-    window.location.href = "../my-policies.html";
+    window.location.href = "../new-payment.html";
 }
 
 function Reviews() {
@@ -122,7 +122,7 @@ function changePlan() {
 }
 
 function viewPayment() {
-    window.location.href = "../make-payment.html";
+    window.location.href = "../view-payments.html";
 }
 
 function goToAdmin() {

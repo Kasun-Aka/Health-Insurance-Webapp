@@ -225,52 +225,12 @@
     </div>
 
     <div class="tabs">
-        <button class="tab active" onclick="showTab('login', this)">Login</button>
-        <button class="tab" onclick="showTab('register', this)">Register</button>
-        <button class="tab" onclick="showTab('reviews', this)">All Reviews</button>
+        <button class="tab active" onclick="showTab('reviews', this)">All Reviews</button>
         <button class="tab" onclick="showTab('addReview', this)">Add Review</button>
     </div>
 
-    <!-- Login Tab -->
-    <div id="login" class="content active">
-        <h2>Login</h2>
-        <div id="loginAlert" class="alert"></div>
-        <div class="form-group">
-            <label for="loginUsername">Username</label>
-            <input type="text" id="loginUsername" placeholder="Enter username">
-        </div>
-        <div class="form-group">
-            <label for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" placeholder="Enter password">
-        </div>
-        <button class="btn btn-primary" onclick="loginUser()">Login</button>
-    </div>
-
-    <!-- Register Tab -->
-    <div id="register" class="content">
-        <h2>Register New User</h2>
-        <div id="registerAlert" class="alert"></div>
-        <div class="form-group">
-            <label for="regName">Full Name</label>
-            <input type="text" id="regName" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-            <label for="regUsername">Username</label>
-            <input type="text" id="regUsername" placeholder="Choose a username">
-        </div>
-        <div class="form-group">
-            <label for="regEmail">Email</label>
-            <input type="email" id="regEmail" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="regPassword">Password</label>
-            <input type="password" id="regPassword" placeholder="Choose a password">
-        </div>
-        <button class="btn btn-primary" onclick="registerUser()">Register</button>
-    </div>
-
     <!-- All Reviews Tab -->
-    <div id="reviews" class="content">
+    <div id="reviews" class="content active">
         <h2>All Reviews</h2>
         <div class="filter-section">
             <label for="filterPackageName">Filter by Package Name:</label>
@@ -291,8 +251,10 @@
             <strong>Logged in as:</strong> <span id="currentUser"></span>
         </div>
         <div class="form-group">
-            <label for="reviewPackageName">Package Name</label>
-            <input type="text" id="reviewPackageName" placeholder="Enter package name">
+            <label for="reviewPackageName">Select Package</label>
+            <select id="reviewPackageName">
+                <option value="">Loading packages...</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="reviewRating">Rating (1-5)</label>

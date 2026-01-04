@@ -43,13 +43,13 @@
             <p id="paymentCount">-</p>
           </div>
         </div>
-        <div class="stat-card">
+        <!-- div class="stat-card">
           <div class="stat-icon">📋</div>
           <div class="stat-content">
             <h3>Filed Claims</h3>
             <p id="claimCount">-</p>
           </div>
-        </div>
+        </div -->
         <div class="stat-card">
           <div class="stat-icon">🏥</div>
           <div class="stat-content">
@@ -64,21 +64,12 @@
     <div class="actions-section">
       <h2>Export System Data</h2>
       <div class="actions-grid">
-        <button class="action-card" onclick="downloadData('users')">
-          <div class="action-icon">👥</div>
-          <h3>Export Users</h3>
-          <p>Download all user registration data</p>
-        </button>
-        <button class="action-card" onclick="downloadData('payments')">
-          <div class="action-icon">💳</div>
-          <h3>Export Payments</h3>
-          <p>Download payment transaction records</p>
-        </button>
-        <button class="action-card" onclick="downloadData('claims')">
+        <button class="action-card" onclick="window.location.href='report-dashboard.html'">
           <div class="action-icon">📋</div>
-          <h3>Export Claims</h3>
-          <p>Download filed claims data</p>
+          <h3>Analytics & Reports</h3>
+          <p>Redirect to Analytics and Reports Management</p>
         </button>
+
         <button class="action-card" onclick="window.location.href='policy-admin.html'">
           <div class="action-icon">🏥</div>
           <h3>Create/Edit Policy Plans</h3>
@@ -98,17 +89,6 @@
         </button>
       </div>
 
-      <div class="actions-section">
-        <h2>Report Management</h2>
-        <div class="actions-grid">
-          <button class="action-card delete-action" onclick="goToReport()">
-            <div class="action-icon"></div>
-            <h3>Report Creation</h3>
-            <p>Manage Reports</p>
-          </button>
-        </div>
-
-
     </div>
   </div>
 </main>
@@ -126,13 +106,13 @@
 
 <script>
   // Configuration - Update these URLs to match your Spring Boot endpoints
-  const API_BASE_URL = 'http://localhost:8080/api';
+  const API_BASE_URL = 'http://localhost:8080';
 
   const endpoints = {
-    users: `${API_BASE_URL}/users`,
-    payments: `${API_BASE_URL}/payments/all`,
+    users: `${API_BASE_URL}/api/users`,
+    payments: `${API_BASE_URL}/api/payments/view/all`,
     claims: `${API_BASE_URL}/file-claims`,
-    plans: `${API_BASE_URL}/plans`
+    plans: `${API_BASE_URL}/api/policies/active`
   };
 
 
@@ -317,9 +297,9 @@
                 <h2 style="color: #f44336; margin-bottom: 1rem;">Access Denied</h2>
                 <p style="color: #666; margin-bottom: 2rem; font-size: 1.1rem;">${message}</p>
                 <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button onclick="window.location.href='Dashboard.html'"
+                    <button onclick="window.location.href='index.html'"
                             style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1rem;">
-                        Go to Customer Dashboard
+                        Go to Home Page
                     </button>
                     <button onclick="window.location.reload()"
                             style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1rem;">
@@ -374,70 +354,7 @@
     // Load admin dashboard
     loadStatistics();
     showToast('Admin Dashboard loaded successfully!', 'info');
-
-    // Add admin management buttons
-    addAdminManagementUI();
   });
-
-  function addAdminManagementUI() {
-    // Add admin management buttons to the header
-    const navButtons = document.querySelector('.nav-buttons');
-    if (navButtons) {
-      const adminButton = document.createElement('button');
-      adminButton.className = 'btn btn-outline';
-      adminButton.textContent = 'ADMIN USERS';
-      adminButton.onclick = showAdminManagement;
-
-      navButtons.insertBefore(adminButton, navButtons.firstChild);
-    }
-  }
-
-  function showAdminManagement() {
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5); display: flex; justify-content: center;
-        align-items: center; z-index: 2000;
-    `;
-
-    const adminList = ADMIN_USERS.map(user =>
-            `<li style="margin-bottom: 0.5rem;"><strong>${user.name}</strong> - ${user.email}</li>`
-    ).join('');
-
-    modal.innerHTML = `
-        <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 90%;">
-            <h3 style="color: #1976d2; margin-bottom: 1rem;">Admin User Management</h3>
-            <p><strong>Current Admin Users:</strong></p>
-            <ul style="margin: 1rem 0; padding-left: 2rem;">
-                ${adminList}
-            </ul>
-            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                <h4 style="color: #f44336; margin-bottom: 0.5rem;">To Add New Admin:</h4>
-                <ol style="padding-left: 1.5rem; font-size: 0.9rem; color: #666;">
-                    <li>Open AdminDashboard.js file</li>
-                    <li>Add new entry to ADMIN_USERS array with email, secret code, and name</li>
-                    <li>Save the file</li>
-                    <li>New admin can login with their credentials</li>
-                </ol>
-            </div>
-            <div style="text-align: right;">
-                <button onclick="this.closest('div').parentElement.remove()"
-                        style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">
-                    Close
-                </button>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-  }
-
-
-
-
-
-
-
 
 
 
@@ -469,11 +386,6 @@
 
     } catch (error) {
       console.error('Error loading statistics:', error);
-      // Use mock data for demo purposes
-      updateStatCard('userCount', 125);
-      updateStatCard('paymentCount', 89);
-      updateStatCard('claimCount', 47);
-      updateStatCard('planCount', 12);
     } finally {
       showLoading(false);
     }
@@ -534,179 +446,6 @@
     }, 50);
   }
 
-  // Download data as CSV
-  async function downloadData(type) {
-    showLoading(true);
-
-    try {
-      console.log(`Starting CSV export for ${type}...`);
-      const data = await fetchDataWithDebug(type);
-
-      if (data && data.length > 0) {
-        console.log(`Real data found for ${type}:`, data.length, 'records');
-        const csv = convertToCSV(data, type);
-        downloadCSV(csv, type);
-        showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} data exported successfully! (${data.length} records)`, 'success');
-      } else {
-        console.log(`No real data for ${type}, using mock data...`);
-        // Generate mock data for demo
-        const mockData = generateMockData(type);
-        const csv = convertToCSV(mockData, type);
-        downloadCSV(csv, type);
-        showToast(`Demo ${type} data downloaded (${mockData.length} records) - Real data unavailable`, 'success');
-      }
-
-    } catch (error) {
-      console.error('Error downloading data:', error);
-      // Fallback to mock data
-      const mockData = generateMockData(type);
-      const csv = convertToCSV(mockData, type);
-      downloadCSV(csv, type);
-      showToast(`Demo ${type} data downloaded (API error)`, 'success');
-    } finally {
-      showLoading(false);
-    }
-  }
-
-  // Convert data to CSV format
-  function convertToCSV(data, type) {
-    if (!data || data.length === 0) return '';
-
-    const headers = getCSVHeaders(type);
-    const csvRows = [headers];
-
-    data.forEach(item => {
-      const row = getCSVRow(item, type);
-      csvRows.push(row);
-    });
-
-    return csvRows.map(row =>
-            row.map(field => {
-              const value = field !== null && field !== undefined ? String(field) : '';
-              return value.includes(',') || value.includes('"') || value.includes('\n')
-                      ? `"${value.replace(/"/g, '""')}"`
-                      : value;
-            }).join(',')
-    ).join('\n');
-  }
-
-  // Get CSV headers based on data type
-  function getCSVHeaders(type) {
-    const headerMappings = {
-      users: ['ID', 'Username', 'Email', 'Created At'],
-      payments: ['ID', 'User Email', 'Plan Name', 'Plan Category', 'Amount', 'Payment Method', 'Status', 'Transaction ID', 'Customer Name', 'Customer NIC', 'Customer Phone', 'Payment Date', 'Created At'],
-      claims: ['ID', 'Claim Type', 'Service Date', 'Provider Name', 'Amount', 'Diagnosis', 'Treatment', 'Provider Address', 'Provider Phone', 'Is Emergency', 'Status', 'Submission Date'],
-      plans: ['ID', 'Category', 'Name', 'Plan Type', 'Annual Limit', 'Room Type', 'Room Limit', 'OPD Limit', 'OPD Per Visit', 'Pre Hosp Days', 'Post Hosp Days', 'Tags', 'Created At']
-    };
-    return headerMappings[type] || [];
-  }
-
-  // Get CSV row based on data type
-  function getCSVRow(item, type) {
-    const rowMappings = {
-      users: [
-        item.id || '',
-        item.username || '',
-        item.email || '',
-        formatDate(item.createdAt)
-      ],
-      payments: [
-        item.id || '',
-        item.customerEmail || item.user?.email || '',
-        item.planName || '',
-        item.planCategory || '',
-        item.amount || '',
-        item.paymentMethod || '',
-        item.paymentStatus || '',
-        item.transactionId || '',
-        item.customerFullName || '',
-        item.customerNic || '',
-        item.customerPhone || '',
-        formatDate(item.paymentDate),
-        formatDate(item.createdAt)
-      ],
-      claims: [
-        item.id || '',
-        item.claimType || '',
-        formatDate(item.serviceDate),
-        item.providerName || '',
-        item.amount || '',
-        item.diagnosis || '',
-        item.treatment || '',
-        item.providerAddress || '',
-        item.providerPhone || '',
-        item.isEmergency || item.emergency || false,
-        item.status || 'PENDING',
-        formatDate(item.submissionDate)
-      ],
-      plans: [
-        item.id || '',
-        item.category || '',
-        item.name || '',
-        item.planType || '',
-        item.annualLimit || '',
-        item.roomType || '',
-        item.roomLimit || '',
-        item.opdLimit || '',
-        item.opdPerVisit || '',
-        item.preHospDays || '',
-        item.postHospDays || '',
-        item.tags || '',
-        formatDate(item.createdAt)
-      ]
-    };
-    return rowMappings[type] || [];
-  }
-
-  // Generate mock data for demo purposes
-  function generateMockData(type) {
-    const mockDataGenerators = {
-      users: () => Array.from({length: 125}, (_, i) => ({
-        id: i + 1,
-        username: `user${i + 1}`,
-        email: `user${i + 1}@ceymed.com`,
-        createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString()
-      })),
-      payments: () => Array.from({length: 89}, (_, i) => ({
-        id: i + 1,
-        customerEmail: `user${Math.floor(Math.random() * 125) + 1}@ceymed.com`,
-        planName: ['Basic Health Plan', 'Premium Care', 'Family Coverage'][Math.floor(Math.random() * 3)],
-        amount: (Math.random() * 50000 + 10000).toFixed(2),
-        paymentMethod: 'CARD',
-        paymentStatus: 'COMPLETED',
-        createdAt: new Date().toISOString()
-      })),
-      claims: () => Array.from({length: 47}, (_, i) => ({
-        id: i + 1,
-        claimType: 'Medical Consultation',
-        amount: (Math.random() * 25000 + 1000).toFixed(2),
-        status: 'PENDING',
-        createdAt: new Date().toISOString()
-      })),
-      plans: () => Array.from({length: 12}, (_, i) => ({
-        id: i + 1,
-        name: `Plan ${i + 1}`,
-        category: 'CORE',
-        createdAt: new Date().toISOString()
-      }))
-    };
-    return mockDataGenerators[type] ? mockDataGenerators[type]() : [];
-  }
-
-  // Download CSV file
-  function downloadCSV(csvData, filename) {
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `ceymed_${filename}_${getCurrentDateString()}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
-
   // Navigation functions
   function goToDashboard() {
     showToast('Redirecting to main dashboard...', 'info');
@@ -761,36 +500,5 @@
     }
   }
 </script>
-
-<style>
-  /* Additional styles for delete action */
-  .delete-action {
-    border: 2px solid #f44336 !important;
-  }
-
-  .delete-action:hover {
-    background-color: #f44336 !important;
-    color: white !important;
-  }
-
-  .delete-action .action-icon {
-    background: linear-gradient(45deg, #f44336, #ef5350) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
-  }
-
-  .delete-action:hover .action-icon {
-    -webkit-text-fill-color: white !important;
-  }
-
-  .delete-action h3 {
-    color: #f44336 !important;
-  }
-
-  .delete-action:hover h3 {
-    color: white !important;
-  }
-</style>
 </body>
 </html>

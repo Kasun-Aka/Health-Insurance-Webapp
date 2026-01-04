@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Payment History</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 40px; background: #f4f7f6; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h2 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
+        .user-welcome { margin-bottom: 20px; color: #666; font-style: italic; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background-color: #f8f9fa; color: #555; text-transform: uppercase; font-size: 13px; }
+        tr:hover { background-color: #fcfcfc; }
+        .status-pill { background: #d4edda; color: #155724; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .error-msg { color: #dc3545; padding: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>My Payment History</h2>
+    <div id="welcomeArea" class="user-welcome"></div>
+
+    <table id="paymentsTable">
+        <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <tr><td colspan="5">Loading your records...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // 1. Get User ID from LocalStorage (Same logic as your dashboard/reviews)
+    function getLoggedInUserId() {
+        const userSessionData = localStorage.getItem("userSession");
+        if (userSessionData) {
+            try {
+                const user = JSON.parse(userSessionData);
+                if(user.username) {
+                    document.getElementById('welcomeArea').textContent = `Showing records for: ${user.username}`;
+                }
+                return user.userId;
+            } catch (e) {
+                console.error("Error parsing userSession:", e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    // 2. Automatically fetch payments on page load
+    async function init() {
+        const userId = getLoggedInUserId();
+        const tbody = document.getElementById('tableBody');
+
+        if (!userId) {
+            tbody.innerHTML = "<tr><td colspan='5' class='error-msg'>No user session found. Please log in again.</td></tr>";
+            return;
+        }
+
+        try {
+            // URL matches your Java Controller: @GetMapping("/view/{userId}")
+            const response = await fetch(`http://localhost:8080/api/payments/view/${userId}`);
+
+            if (!response.ok) throw new Error("Could not fetch data");
+
+            const payments = await response.json();
+            tbody.innerHTML = ""; // Clear the loading message
+
+            if (payments.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding:20px;'>You haven't made any payments yet.</td></tr>";
+                return;
+            }
+
+            payments.forEach(p => {
+                const row = `<tr>
+                    <td>#${p.id}</td>
+                    <td>$${p.amount.toFixed(2)}</td>
+                    <td>${p.paymentMethod || 'N/A'}</td>
+                    <td><span class="status-pill">${p.paymentStatus}</span></td>
+                    <td>${new Date(p.paymentDate).toLocaleString()}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        } catch (err) {
+            console.error(err);
+            tbody.innerHTML = "<tr><td colspan='5' class='error-msg'>Connection error. Ensure the backend is running.</td></tr>";
+        }
+    }
+
+    // Start the process
+    init();
+</script>
+</body>
+</html>

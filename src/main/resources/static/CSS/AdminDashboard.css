@@ -201,7 +201,7 @@ body {
     margin-bottom: 1rem;
     background: linear-gradient(45deg, #1976d2, #42a5f5);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+
     background-clip: text;
 }
 
@@ -451,3 +451,32 @@ body {
         font-size: 1.5rem;
     }
 }
+
+      /* Additional styles for delete action */
+      .delete-action {
+        border: 2px solid #f44336 !important;
+      }
+
+      .delete-action:hover {
+        background-color: #f44336 !important;
+        color: white !important;
+      }
+
+      .delete-action .action-icon {
+        background: linear-gradient(45deg, #f44336, #ef5350) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+      }
+
+      .delete-action:hover .action-icon {
+        -webkit-text-fill-color: white !important;
+      }
+
+      .delete-action h3 {
+        color: #f44336 !important;
+      }
+
+      .delete-action:hover h3 {
+        color: white !important;
+      }

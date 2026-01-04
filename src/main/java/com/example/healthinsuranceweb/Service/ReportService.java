@@ -56,9 +56,25 @@ public class ReportService {
     }
 
     //  Get most selected policy
-    public Long getMostSelectedPolicyId() {
+    public Object[] getMostSelectedPolicyName() {
         try {
-            return reportRepository.findMostSelectedPolicyId();
+            return reportRepository.findMostSelectedPolicyName();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Object[]> findAverageRatingsByPackage() {
+        try {
+            return reportRepository.findAverageRatingsByPackage();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Object[]> findMonthlyEarnings() {
+        try {
+            return reportRepository.findMonthlyEarnings();
         } catch (Exception e) {
             return null;
         }

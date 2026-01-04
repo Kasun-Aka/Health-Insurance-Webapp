@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface policyRepository extends JpaRepository<policy, Long> {
     List<policy> findByActiveTrue();
-
 }

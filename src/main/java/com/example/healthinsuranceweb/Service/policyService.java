@@ -28,6 +28,8 @@ public class policyService {
                     policy.setDescription(updatedPolicy.getDescription());
                     policy.setRate(updatedPolicy.getRate());
                     policy.setDurationDays(updatedPolicy.getDurationDays());
+                    policy.setBenefits(updatedPolicy.getBenefits());
+                    policy.setImageUrl(updatedPolicy.getImageUrl());
                     policy.setActive(updatedPolicy.isActive());
                     return policyRepository.save(policy);
                 })

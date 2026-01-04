@@ -1,10 +1,14 @@
 package com.example.healthinsuranceweb.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Getter
 @Setter
@@ -29,14 +33,14 @@ public class policy {
 
     private Integer durationDays;
 
-    private boolean active = true;
-
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
-    public String getImageUrl() {
-        return "/assets/" + imageUrl;
-    }
-
     private String benefits;
+
+    private boolean active = true;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)
+    private List<Payment> payment;
 }

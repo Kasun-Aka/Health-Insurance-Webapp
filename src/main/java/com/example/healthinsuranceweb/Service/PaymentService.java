@@ -1,7 +1,7 @@
 package com.example.healthinsuranceweb.Service;
 
-import com.example.healthinsuranceweb.Model.Payment;
 import com.example.healthinsuranceweb.Entity.User;
+import com.example.healthinsuranceweb.Model.Payment;
 import com.example.healthinsuranceweb.Model.policy;
 import com.example.healthinsuranceweb.Repository.PaymentRepository;
 import com.example.healthinsuranceweb.Repository.UserRepository;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.List;
 
 @Service
@@ -23,48 +24,43 @@ public class PaymentService {
     @Autowired
     private UserRepository userRepository;
 
-    //  Use your existing policyService — don’t directly use the repository
     @Autowired
     private policyService policyService;
 
-    /**
-     * Process a new payment for a user and policy.
-     */
     public Payment processPayment(Long userId, Long policyId, BigDecimal amount, String method) {
-        // Get user
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User with ID " + userId + " not found"));
 
-        // Get policy through the service (not the repository)
         policy selectedPolicy = policyService.getPolicy(policyId);
         if (selectedPolicy == null) {
-            throw new RuntimeException("Policy not found");
+            throw new RuntimeException("Policy with ID " + policyId + " not found");
         }
 
-        // Create payment record
         Payment payment = new Payment();
         payment.setUser(user);
         payment.setPolicy(selectedPolicy);
+
         payment.setAmount(amount != null ? amount : selectedPolicy.getRate());
+
         payment.setPaymentDate(LocalDateTime.now());
         payment.setPaymentStatus("COMPLETED");
         payment.setPaymentMethod(method);
-        payment.setTransactionId("TXN" + System.currentTimeMillis());
+        payment.setTransactionId("TXN-" + UUID.randomUUID().toString().substring(0, 8));
 
         return paymentRepository.save(payment);
     }
 
-    /**
-     * Retrieve all payments made by a user.
-     */
-    public List<Payment> getUserPayments(Long userId) {
+    public List<Payment> findPaymentsByUserId(Long userId) {
+        // 1. Verify the user exists first (Optional but good for error handling)
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User with ID " + userId + " not found");
+        }
+
+        // 2. Fetch the list of payments from the repository
         return paymentRepository.findByUserIdOrderByPaymentDateDesc(userId);
     }
 
-    /**
-     * Retrieve a policy by ID via the service.
-     */
-    public policy getPolicyById(Long policyId) {
-        return policyService.getPolicy(policyId);
+    public List<Payment> findAllPayments() {
+        return paymentRepository.findAll();
     }
 }

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make a Payment</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 50px; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { color: #333; margin-top: 0; text-align: center; border-bottom: 2px solid #28a745; padding-bottom: 10px; }
+        .user-info { background: #e7f3ff; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; color: #0056b3; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #218838; transform: translateY(-1px); }
+        #message { margin-top: 15px; padding: 10px; border-radius: 6px; display: none; text-align: center; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Submit Payment</h2>
+
+    <div id="userInfo" class="user-info">Loading user data...</div>
+
+    <div id="message"></div>
+
+    <form id="paymentForm">
+        <div class="form-group">
+            <label>Select Policy</label>
+            <select id="policyId" required>
+                <option value="">Loading policies...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Amount</label>
+            <input type="number" id="amount" step="0.01" required placeholder="0.00">
+        </div>
+
+        <div class="form-group">
+            <label>Payment Method</label>
+            <select id="method">
+                <option value="cash">Cash</option>
+                <option value="card">Credit Card</option>
+                <option value="online">Online Transfer</option>
+            </select>
+        </div>
+
+        <button type="submit" id="submitBtn">Pay Now</button>
+    </form>
+</div>
+
+<script>
+    let currentUserId = null;
+
+    // 1. Initialize Page Data
+    async function init() {
+        // Sync User from LocalStorage
+        const userSessionData = localStorage.getItem('userSession');
+        if (userSessionData) {
+            const user = JSON.parse(userSessionData);
+            currentUserId = user.userId;
+            document.getElementById('userInfo').textContent = `Paying as: ${user.username || 'User'}`;
+        } else {
+            document.getElementById('userInfo').innerHTML = `<b style="color:red">Error: No User Logged In</b>`;
+            document.getElementById('submitBtn').disabled = true;
+        }
+
+        // Load Policies for Dropdown
+        await loadPolicies();
+    }
+
+    async function loadPolicies() {
+        const policySelect = document.getElementById('policyId');
+        try {
+            const response = await fetch('http://localhost:8080/api/policies/active');
+            const policies = await response.json();
+
+            policySelect.innerHTML = '<option value="">-- Choose a Policy --</option>';
+            policies.forEach(p => {
+                const option = document.createElement('option');
+                // Use the ID as the value for the backend, but show the name to the user
+                option.value = p.id;
+                option.textContent = `${p.policyName || p.packageName}`;
+                policySelect.appendChild(option);
+            });
+        } catch (err) {
+            policySelect.innerHTML = '<option value="">Error loading policies</option>';
+        }
+    }
+
+    // 2. Handle Form Submission
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgDiv = document.getElementById('message');
+
+        if (!currentUserId) {
+            alert("Session expired. Please log in again.");
+            return;
+        }
+
+        const data = {
+            userId: currentUserId,
+            policyId: document.getElementById('policyId').value,
+            amount: document.getElementById('amount').value,
+            method: document.getElementById('method').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/payments/new', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                msgDiv.style.display = 'block';
+                msgDiv.style.background = '#d4edda';
+                msgDiv.style.color = '#155724';
+                msgDiv.innerText = "Payment Successful!";
+                document.getElementById('paymentForm').reset();
+            } else {
+                throw new Error('Failed to process payment');
+            }
+        } catch (err) {
+            msgDiv.style.display = 'block';
+            msgDiv.style.background = '#f8d7da';
+            msgDiv.style.color = '#721c24';
+            msgDiv.innerText = "Error: " + err.message;
+        }
+    });
+
+    // Run on load
+    init();
+</script>
+</body>
+</html>

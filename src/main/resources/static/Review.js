@@ -1,5 +1,63 @@
 const API_BASE = 'http://localhost:8080/reviews';
 let currentUserId = null;
+let currentUserName = null;
+
+// New helper to read from local storage (matching your dashboard logic)
+function syncUserFromStorage() {
+    const userSessionData = localStorage.getItem('userSession');
+    if (userSessionData) {
+        try {
+            const user = JSON.parse(userSessionData);
+            currentUserId = user.userId;
+            currentUserName = user.username || 'User';
+
+            console.log("Review Page synced with User ID:", currentUserId);
+        } catch (e) {
+            console.error("Error parsing userSession in reviews page:", e);
+        }
+    }
+}
+
+async function loadPolicyDropdown() {
+    const dropdown = document.getElementById('reviewPackageName');
+    try {
+        // Replace this URL with your actual endpoint that returns all policies
+        const response = await fetch('http://localhost:8080/api/policies/active');
+        const policies = await response.json();
+
+        dropdown.innerHTML = '<option value="">-- Choose a Policy --</option>';
+        policies.forEach(policy => {
+            // Use policy.policyName or policy.packageName based on your Policy Entity
+            const name = policy.policyName || policy.packageName;
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            dropdown.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Error loading policies:", error);
+        dropdown.innerHTML = '<option value="">Error loading packages</option>';
+    }
+}
+
+async function initializeApp() {
+    // 1. Get data from local storage instead of a fetch call
+    syncUserFromStorage();
+
+    // 2. Update UI to show who is logged in
+    const userInfo = document.getElementById('userInfoDiv');
+    if (userInfo && currentUserId) {
+        userInfo.style.display = 'block';
+        document.getElementById('currentUser').textContent = currentUserName;
+    }
+
+    // 3. Auto-load the reviews and policy dropdown
+    await loadPolicyDropdown();
+    await loadAllReviews();
+}
+
+// Call the function immediately
+initializeApp();
 
 async function showTab(tabName, element) {
     document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
@@ -19,139 +77,35 @@ function showAlert(elementId, message, type) {
     setTimeout(() => alert.classList.remove('show'), 5000);
 }
 
-async function registerUser() {
-    const nameField = document.getElementById('regName');
-    const username = document.getElementById('regUsername').value;
-    const email = document.getElementById('regEmail').value;
-    const password = document.getElementById('regPassword').value;
-    const name = nameField ? nameField.value : username;
-
-    if (!username || !email || !password) {
-        showAlert('registerAlert', 'Please fill all fields', 'error');
-        return;
-    }
-
-    if (nameField && !name) {
-        showAlert('registerAlert', 'Please enter your name', 'error');
-        return;
-    }
-
-    try {
-        console.log('Sending registration request...');
-        console.log('Data:', {name, username, email});
-
-        const response = await fetch(`${API_BASE}/addUser`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({name, username, email, password})
-        });
-
-        console.log('Response status:', response.status);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Registration failed:', errorText);
-            throw new Error(errorText || `Server error: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log('Registration successful:', result);
-
-        showAlert('registerAlert', `User registered successfully: ${result.username}`, 'success');
-
-        if (nameField) nameField.value = '';
-        document.getElementById('regUsername').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPassword').value = '';
-    } catch (error) {
-        console.error('Registration error:', error);
-        showAlert('registerAlert', 'Error: ' + error.message, 'error');
-    }
-}
-
-async function loginUser() {
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-
-    if (!username || !password) {
-        showAlert('loginAlert', 'Please enter username and password', 'error');
-        return;
-    }
-
-    try {
-        console.log('Attempting login for:', username);
-
-        const response = await fetch(`${API_BASE}/login?username=${username}&password=${password}`, {
-            method: 'POST'
-        });
-
-        console.log('Response status:', response.status);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Login failed');
-        }
-
-        const user = await response.json();
-        console.log('Login response:', user);
-
-        if (user && user.id) {
-            currentUserId = user.id;
-            showAlert('loginAlert', `Welcome ${user.username}!`, 'success');
-            document.getElementById('currentUser').textContent = user.username;
-            document.getElementById('userInfoDiv').style.display = 'block';
-            console.log('Login successful, User ID:', currentUserId);
-        } else {
-            showAlert('loginAlert', 'Invalid credentials', 'error');
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        showAlert('loginAlert', 'Error: ' + error.message, 'error');
-    }
-}
-
 async function addReview() {
     const packageName = document.getElementById('reviewPackageName').value;
     const rating = document.getElementById('reviewRating').value;
     const comment = document.getElementById('reviewComment').value;
 
     if (!currentUserId) {
-        showAlert('addReviewAlert', 'Please login first', 'error');
+        showAlert('addReviewAlert', 'System busy: Fetching user data...', 'error');
         return;
     }
 
-    if (!packageName || !rating || !comment) {
-        showAlert('addReviewAlert', 'Please fill all fields', 'error');
-        return;
-    }
-
-    if (rating < 1 || rating > 5) {
-        showAlert('addReviewAlert', 'Rating must be between 1 and 5', 'error');
-        return;
-    }
+    const reviewData = {
+        userId: currentUserId, // Automatically filled from initializeApp()
+        packageName: packageName,
+        comment: comment,
+        rating: parseInt(rating)
+    };
 
     try {
-        console.log('Adding review...');
-
-        const response = await fetch(`${API_BASE}/add?userId=${currentUserId}&packageName=${encodeURIComponent(packageName)}&comment=${encodeURIComponent(comment)}&rating=${rating}`, {
-            method: 'POST'
+        const response = await fetch(`${API_BASE}/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reviewData)
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Failed to add review');
+        if (response.ok) {
+            showAlert('addReviewAlert', 'Review added successfully!', 'success');
+            // ... clear fields ...
         }
-
-        const result = await response.json();
-        console.log('Review added:', result);
-
-        showAlert('addReviewAlert', 'Review added successfully!', 'success');
-        document.getElementById('reviewPackageName').value = '';
-        document.getElementById('reviewRating').value = '';
-        document.getElementById('reviewComment').value = '';
-        document.getElementById('ratingStars').textContent = '';
     } catch (error) {
-        console.error('Review error:', error);
         showAlert('addReviewAlert', 'Error: ' + error.message, 'error');
     }
 }
@@ -200,21 +154,23 @@ async function filterReviews() {
 
 function displayReviews(reviews) {
     const container = document.getElementById('reviewsList');
-
     if (reviews.length === 0) {
         container.innerHTML = '<p>No reviews found.</p>';
         return;
     }
 
     container.innerHTML = reviews.map((review) => {
-        const username = review.user ? review.user.username : 'Unknown';
-        const packageName = review.insurancePackage ? review.insurancePackage.packageName : 'Unknown';
+        const username = review.user ? review.user.username : 'Unknown User';
+
+        // FIX: Try policyName first, then packageName (matching your Java Entity field)
+        const pkg = review.insurancePackage;
+        const packageName = pkg ? (pkg.policyName || pkg.packageName || 'Unknown Package') : 'Unknown Package';
 
         return `
             <div class="review-card">
                 <div class="review-header">
                     <div>
-                        <strong>${username}</strong> | Package: ${packageName}
+                        <strong>${username}</strong> | <span class="badge">Package: ${packageName}</span>
                         <div class="review-rating">${'⭐'.repeat(review.rating)}</div>
                     </div>
                     <div class="review-actions">
