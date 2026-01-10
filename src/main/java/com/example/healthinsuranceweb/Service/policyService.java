@@ -38,11 +38,13 @@ public class policyService {
 
     // Admin - delete policy
     public void deletePolicy(Long id) {
+
         policyRepository.deleteById(id);
     }
 
     // Customer - view active policies
     public List<policy> getActivePolicies() {
+
         return policyRepository.findByActiveTrue();
     }
 

@@ -1,0 +1,6 @@
+services:
+  healthinsuranceweb:
+    build: .
+    container_name: healthinsuranceweb
+    ports:
+      - "8080:8080"
