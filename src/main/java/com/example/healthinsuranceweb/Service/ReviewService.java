@@ -79,8 +79,11 @@ public class ReviewService {
     // Get Reviews by Package Name
     public List<Review> getReviewsByPackageName(String packageName) {
         TypedQuery<Review> query = entityManager.createQuery(
-                "SELECT r FROM Review r WHERE r.insurancePackage.packageName = :packageName", Review.class);
+                "SELECT r FROM Review r WHERE r.insurancePackage.policyName = :packageName",
+                Review.class
+        );
         query.setParameter("packageName", packageName);
         return query.getResultList();
     }
+
 }
